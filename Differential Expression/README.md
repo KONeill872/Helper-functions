@@ -1,6 +1,6 @@
 # Differential expression analysis methods 
 
-The script contains wrapper functions for: 
+The script contains wrapper functions cfor: 
 - DESeq2 (Wald test): `DEA_DESeq2(...)`
 - Limma trend: `DEA_limma(...)`
 - Limma voom: `DEA_limma(..., voom=T)`
