@@ -1,4 +1,4 @@
-# This function allows multiple differential expression methods to be implemented. 
+# Wrapper functions for differential expression methods. 
 
 # DESeq2 ------------------------------------------------------------------
 
