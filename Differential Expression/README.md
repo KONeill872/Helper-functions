@@ -32,7 +32,7 @@ Dataframe containing metadata for the experiment. Sample should match names in D
 Example model for DESeq2, Limma and edgeR methods: `model <- ~ batch + condition`  
 Example model for LMM or GLMM (requires random effect in the model): `model <- (1| batch) + condition`  
 
-#### Can add gene name annotation from Ensembl annotation
+#### Can add gene names from Ensembl annotation
 Insert gene annotation to `geneNames`.
 
 #### Output files can be used in `plotFunctions.R` for PCA, volcano, MA and heatmap. 
