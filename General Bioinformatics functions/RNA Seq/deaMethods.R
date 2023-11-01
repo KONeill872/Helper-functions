@@ -1,24 +1,4 @@
 # This function allows multiple differential expression methods to be implemented. 
-# Input required name of tool or test and factors for model matrix.
-
-
-diffExpAnalysis <- function(method, countData, designTable, model, random=T, fdr = 0.05, lfc = 1, shrinkage =F, norm = "TMM") {
-  
-  # if method = ALL  
-  
-  # if DESEQ2 
-  if(method =="DESeq2"){}
-  # if limma 
-  # if limma voom
-  # if limma voom with random effect 
-  # if edge R
-  # if t.test 
-  # if wilcoxon test 
-  # if plots =T
-  ## output list 
-}
-
-model <- ~ patient + tissue
 
 # DESeq2 ------------------------------------------------------------------
 
