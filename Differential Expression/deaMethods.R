@@ -1,5 +1,6 @@
 # Wrapper functions for differential expression methods. 
 
+
 # DESeq2 ------------------------------------------------------------------
 
 DEA_DESeq2 <- function(dge, designTable, model,fdr = 0.05, lfc  = 1,
@@ -8,10 +9,10 @@ DEA_DESeq2 <- function(dge, designTable, model,fdr = 0.05, lfc  = 1,
 cat("Starting differential expression analysis with DESeq2 \n")
 dds <-DESeqDataSetFromMatrix(countData = dge$counts, colData = designTable, design= model)
 dds <- DESeq(dds)
-results <- DESeq2::results(dds, alpha =  fdr) # if FDR is different to default 0.01 change alpha to match FDR threshold
+results <- DESeq2::results(dds, alpha =  fdr)
 if(shrinkage){
 cat("Shrinkage of LFCs \n")
-coeffContrast <- tail(resultsNames(dds),n =1)
+coeffContrast <- tail(resultsNames(dds),n =1 )
 results <- lfcShrink(dds, coef=coeffContrast,res=results) 
 }
 if(!is.null(geneNames)){
@@ -20,7 +21,7 @@ if(!is.null(geneNames)){
   names(results)[1] <- "Ensembl.ID"
 }
 results <- as.data.frame(results) %>% mutate(sig = case_when(abs(results$log2FoldChange) > lfc & results$padj < fdr ~ "sig", 
-                                             .default =" not sig")) %>% rename(., all_of(c(FDR = "padj",LFC = "log2FoldChange")))
+                                             .default =" not sig")) %>% rename(., all_of(c(pval = "pvalue", FDR = "padj",LFC = "log2FoldChange")))
 cat(paste("Number of DEGs: ", table(results$sig)[2], "\n"))
 cat("Done!\n")
 return(results)
@@ -73,15 +74,15 @@ DEA_limma <- function(dge, designTable, model, fdr = 0.05, lfc = 1,
     fit <- lmFit(logCPM, design)
   }
   fit <- eBayes(fit, trend=T)
+  results <- topTable(fit,n=Inf, coef=ncol(designR)) %>% 
+    mutate(sig = case_when(abs(logFC) > lfc & adj.P.Val < fdr ~ "sig", .default =" not sig")) %>%
+    rename(., all_of(c(pval = "P.Value", FDR = "adj.P.Val",LFC = "logFC")))
 
-   if(!is.null(geneNames)){
+  if(!is.null(geneNames)){
     cat("Adding gene names\n")
     results <- merge(as.data.frame(results),unique(geneNames[,c(1,5)]), by.x=0,by.y=1,all.x=T)
     names(results)[1] <- "Ensembl.ID"
   } 
-  results <- topTable(fit,n=Inf, coef=ncol(designR)) %>% 
-    mutate(sig = case_when(abs(logFC) > lfc & adj.P.Val < fdr ~ "sig", .default =" not sig")) %>%
-    rename(., all_of(c(pval = "P.Value", FDR = "adj.P.Val",LFC = "logFC")))
   cat(paste("Number of DEGs: ", table(results$sig)[2], "\n"))
   cat("Done!")
   return(results)
@@ -144,7 +145,7 @@ DEA_glmm <- function(dge, designTable, model , dfe = 0.05, lfc =1,
                              dispersion = disp, sizeFactors = sizeFactors)
   }
   stopCluster(cl)
-  results <- data.frame(FDR  = p.adjust(results@stats$pvals, method="BH"), LFC = results@stats$coef[,2]) %>% 
+  results <- data.frame(pval =results@stats$pvals, FDR  = p.adjust(results@stats$pvals, method="BH"), LFC = results@stats$coef[,2]) %>% 
     mutate(sig = case_when(abs(LFC) > lfc & FDR < fdr ~ "sig", .default =" not sig")) 
   
   if(!is.null(geneNames)){
@@ -157,10 +158,3 @@ DEA_glmm <- function(dge, designTable, model , dfe = 0.05, lfc =1,
   return(results)
   
 }
-
-
-
-
-
-
-
