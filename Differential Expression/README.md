@@ -1,6 +1,6 @@
 # Differential expression analysis methods 
 
-The script contains wrapper functions cfor: 
+The script contains wrapper functions for: 
 - DESeq2 (Wald test): `DEA_DESeq2(...)`
 - Limma trend: `DEA_limma(...)`
 - Limma voom: `DEA_limma(..., voom=T)`
@@ -14,7 +14,7 @@ The script contains wrapper functions cfor:
 ### Inputs requirements
 
 #### Counts data
-All methods required DGEList for input. 
+All methods required DGEList for input. Filter low counts prior to running functions.
 
 #### Design table 
 Dataframe containing metadata for the experiment. Sample should match names in DGEList.
