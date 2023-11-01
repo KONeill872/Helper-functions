@@ -2,16 +2,16 @@
 
 # DESeq2 ------------------------------------------------------------------
 
-DEA_DESeq2 <- function(counts, designTable, model,fdr = 0.05, lfc  = 1,
+DEA_DESeq2 <- function(dge, designTable, model,fdr = 0.05, lfc  = 1,
                        shrinkage = F,geneNames=NULL){
 
 cat("Starting differential expression analysis with DESeq2 \n")
-dds <-DESeqDataSetFromMatrix(countData = countData_dgeList, colData = designTable, design= model)
+dds <-DESeqDataSetFromMatrix(countData = dge$counts, colData = designTable, design= model)
 dds <- DESeq(dds)
-results <- DESeq2::results(dds, alpha =  0.05)
+results <- DESeq2::results(dds, alpha =  fdr) # if FDR is different to default 0.01 change alpha to match FDR threshold
 if(shrinkage){
 cat("Shrinkage of LFCs \n")
-coeffContrast <- tail(resultsNames(dds),n =1 )
+coeffContrast <- tail(resultsNames(dds),n =1)
 results <- lfcShrink(dds, coef=coeffContrast,res=results) 
 }
 if(!is.null(geneNames)){
