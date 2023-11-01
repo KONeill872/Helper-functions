@@ -1,5 +1,5 @@
 # Helper-functions: scripts used for the analysis of various omics data
-Some functions to use on bam files (either in R or in bash script on HPC)
+Some functions to use on bam files (either in R or in bash script to be used on a HPC)
 
 ### Small RNA helper functions
 
